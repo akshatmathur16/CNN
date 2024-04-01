@@ -6,16 +6,15 @@ bit clk;
 bit rst;
 bit [IP_DATA_WIDTH-1:0] ifmap[IFMAP_SIZE-1:0][IFMAP_SIZE-1:0];
 bit [IP_DATA_WIDTH-1:0] filter[FILTER_SIZE-1:0][FILTER_SIZE-1:0];
-bit [IP_DATA_WIDTH-1:0] ofmap[OFMAP_SIZE-1:0][OFMAP_SIZE-1:0];
+bit [(2*IP_DATA_WIDTH):0] result_matrix [OFMAP_SIZE-1:0][OFMAP_SIZE-1:0];
 
-bit [(IP_DATA_WIDTH+IP_DATA_WIDTH)-1:0] op;
 
 
 convolution inst_convolution 
 (
     .ifmap(ifmap),
     .filter(filter),
-    .op(op)
+    .result_matrix(result_matrix)
 );
 
 

@@ -1,3 +1,6 @@
+//Author: Akshat Mathur
+//Code revisions:
+
 module conv_mac 
 import yolo_params_pkg::*;
 (
