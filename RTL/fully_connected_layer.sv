@@ -3,7 +3,8 @@
 
 //Initializing all neurons with same weight
 //TODO add Backprop code here
-module fully_connected_layer #(parameter IP_LAYER_NEURONS=3, ACT_FN="SIGMOID", IP_DATA_WIDTH=8, NUM_IP=8, ACT_FN_SIZE=5, DENSE_LAYER=1, DENSE_LAYER_NEURONS=2 )
+(* keep_hierarchy = "yes" *)module fully_connected_layer 
+import yolo_params_pkg::*;
 (
     input clk,
     input rst,
@@ -24,7 +25,7 @@ genvar i,j,k,l;
 generate
   for(i=0; i< IP_LAYER_NEURONS; i++)
   begin
-      neuron #(.ACT_FN(ACT_FN), .IP_DATA_WIDTH(IP_DATA_WIDTH), .NUM_IP(NUM_IP), .ACT_FN_SIZE(ACT_FN_SIZE) )inst_1
+(* keep_hierarchy = "yes" *) neuron #(.ACT_FN(ACT_FN), .IP_DATA_WIDTH(IP_DATA_WIDTH), .NUM_IP(NUM_IP), .ACT_FN_SIZE(ACT_FN_SIZE) )inst_1
       (
           .clk(clk),
           .rst(rst),
@@ -45,7 +46,7 @@ generate
 //  begin
       for(k=0; k< DENSE_LAYER_NEURONS; k++) //k=2
       begin
-          neuron #(.ACT_FN(ACT_FN), .IP_DATA_WIDTH(IP_DATA_WIDTH), .NUM_IP(IP_LAYER_NEURONS), .ACT_FN_SIZE(ACT_FN_SIZE) )inst_2
+(* keep_hierarchy = "yes" *) neuron #(.ACT_FN(ACT_FN), .IP_DATA_WIDTH(IP_DATA_WIDTH), .NUM_IP(IP_LAYER_NEURONS), .ACT_FN_SIZE(ACT_FN_SIZE) )inst_2
           (
               .clk(clk),
               .rst(rst),
@@ -59,7 +60,7 @@ generate
  // end
 
  
- neuron #(.ACT_FN(ACT_FN), .IP_DATA_WIDTH(IP_DATA_WIDTH), .NUM_IP(DENSE_LAYER_NEURONS), .ACT_FN_SIZE(ACT_FN_SIZE) )inst_3
+(* keep_hierarchy = "yes" *) neuron #(.ACT_FN(ACT_FN), .IP_DATA_WIDTH(IP_DATA_WIDTH), .NUM_IP(DENSE_LAYER_NEURONS), .ACT_FN_SIZE(ACT_FN_SIZE) )inst_3
  (
      .clk(clk),
      .rst(rst),
