@@ -12,7 +12,7 @@ parameter POOL_STRIDE = 2;
 parameter RESULT_WIDTH = ((ARRAY_WIDTH-POOL_FILTER_SIZE)/POOL_STRIDE) + 1;
 
 //full connected layer
-
+//neuron
 parameter IP_LAYER_NEURONS=3;
 parameter ACT_FN="SIGMOID";
 parameter IP_DATA_WIDTH=8;

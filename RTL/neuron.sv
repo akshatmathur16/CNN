@@ -8,7 +8,8 @@
 //TODO take care of -ve no.s
 //TODO generate weights and activation function memory in the neuron itself based on layer and neuron no.
 //TODO consider registers instead of memory for weights - DISCUSS
-module neuron #(parameter ACT_FN="SIGMOID", IP_DATA_WIDTH=8, NUM_IP=8, ACT_FN_SIZE=5 )
+module neuron
+import yolo_params_pkg::*;
 (
     input clk,
     input rst,
