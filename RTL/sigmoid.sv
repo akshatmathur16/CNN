@@ -1,12 +1,12 @@
-module sigmoid_func #(parameter MEM_WIDTH=5, DATA_WIDTH=8)
+module sigmoid_func #(parameter MEM_WIDTH=5, IP_DATA_WIDTH=8)
 (
     input clk,
-    input [MEM_WIDTH-1:0] in,
-    output reg signed [DATA_WIDTH-1:0] mem_out
+    input [MEM_WIDTH-1:0] in, // passing as an address to retrive value from mem
+    output reg signed [IP_DATA_WIDTH-1:0] mem_out
 
 );
 
-bit [DATA_WIDTH-1:0] mem [2**MEM_WIDTH-1:0];
+bit [IP_DATA_WIDTH-1:0] mem [2**MEM_WIDTH-1:0];
 
 initial begin
     $readmemb("sigmem.txt", mem);
@@ -19,7 +19,7 @@ begin
     //begin
     //    mem_out_temp <= mem[]; 
     //end
-    mem_out[0] <= mem[in];
+    mem_out <= mem[in];
 end
 
 endmodule

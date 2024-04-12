@@ -1,13 +1,13 @@
 
-module relu_func #(parameter MEM_WIDTH=5, DATA_WIDTH=8)
+module relu_func #(parameter MEM_WIDTH=5, IP_DATA_WIDTH=8)
 (
     input clk,
     input [MEM_WIDTH-1:0] in,
-    output reg signed [DATA_WIDTH-1:0] mem_out
+    output reg signed [IP_DATA_WIDTH-1:0] mem_out
 
 );
 
-bit [DATA_WIDTH-1:0] mem [2**MEM_WIDTH-1:0];
+bit [IP_DATA_WIDTH-1:0] mem [2**MEM_WIDTH-1:0];
 
 always@(posedge clk)
 begin

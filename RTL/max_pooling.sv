@@ -1,12 +1,12 @@
-module max_pooling
-//import max_pool_pkg::*;
-import yolo_params_pkg::*;
+module max_pooling #(parameter IP_DATA_WIDTH=8, ARRAY_WIDTH=3, POOL_FILTER_SIZE = 2, POOL_STRIDE = 1, RESULT_WIDTH = (((ARRAY_WIDTH-POOL_FILTER_SIZE)/POOL_STRIDE) + 1))
 (
-    input bit [IP_DATA_WIDTH:0] input_vec [0:(ARRAY_WIDTH*ARRAY_WIDTH)-1],
-    output bit [IP_DATA_WIDTH:0] result [0:RESULT_WIDTH*RESULT_WIDTH-1]
+    //input bit [IP_DATA_WIDTH:0] input_vec [0:(ARRAY_WIDTH*ARRAY_WIDTH)-1],
+    //output bit [IP_DATA_WIDTH:0] result [0:RESULT_WIDTH*RESULT_WIDTH-1]
+    input bit signed [2*IP_DATA_WIDTH-1:0] input_vec [(ARRAY_WIDTH*ARRAY_WIDTH)-1:0],
+    output bit signed [2*IP_DATA_WIDTH-1:0] result [RESULT_WIDTH*RESULT_WIDTH-1:0]
 );
      
-bit [IP_DATA_WIDTH-1:0] max_val;
+bit [2*IP_DATA_WIDTH-1:0] max_val;
 
 always @(*)
 begin

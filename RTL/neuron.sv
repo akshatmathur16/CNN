@@ -8,15 +8,15 @@
 //TODO take care of -ve no.s
 //TODO generate weights and activation function memory in the neuron itself based on layer and neuron no.
 //TODO consider registers instead of memory for weights - DISCUSS
-module neuron
-import yolo_params_pkg::*;
+module neuron #(parameter IP_DATA_WIDTH=8, ACT_FN="RELU", NUM_IP=1, ACT_FN_SIZE=5,DENSE_LAYER=1,DENSE_LAYER_NEURONS=2)
+//import yolo_params_pkg::*;
 (
     input clk,
     input rst,
-    input signed [IP_DATA_WIDTH-1:0] x [NUM_IP-1:0],
-    input signed [IP_DATA_WIDTH-1:0] wt_in [NUM_IP-1:0],
+    input signed [2*IP_DATA_WIDTH-1:0] x [NUM_IP-1:0],
+    input signed [2*IP_DATA_WIDTH-1:0] wt_in [NUM_IP-1:0],
     input update_wts,
-    output bit signed [IP_DATA_WIDTH-1:0] out
+    output bit signed [2*IP_DATA_WIDTH-1:0] out
 );
 
 bit signed [2*IP_DATA_WIDTH-1:0] sum_out;
@@ -97,15 +97,15 @@ end
 
 generate
     if(ACT_FN=="SIGMOID")
-        sigmoid_func #(.MEM_WIDTH(ACT_FN_SIZE), .DATA_WIDTH(IP_DATA_WIDTH)) inst_sigmoid_func
+        sigmoid_func #(.MEM_WIDTH(ACT_FN_SIZE), .IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_sigmoid_func
         (
             .clk(clk),
             .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // passing 5 bits
             .mem_out(out)         // getting value from activation function
 
         );
-    else
-        relu_func #(.MEM_WIDTH(ACT_FN_SIZE), .DATA_WIDTH(IP_DATA_WIDTH)) inst_relu_func
+    else if(ACT_FN=="RELU")
+        relu_func #(.MEM_WIDTH(ACT_FN_SIZE), .IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_relu_func
             (
                 .clk(clk),
                 .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // pasing 5 bits

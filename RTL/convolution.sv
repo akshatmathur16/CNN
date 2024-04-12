@@ -6,7 +6,7 @@ import yolo_params_pkg::*;
 (
     input bit [IP_DATA_WIDTH-1:0] ifmap[IFMAP_SIZE-1:0][IFMAP_SIZE-1:0],
     input bit [IP_DATA_WIDTH-1:0] filter [FILTER_SIZE-1:0][FILTER_SIZE-1:0],
-    output bit [(2*IP_DATA_WIDTH):0] result_matrix [OFMAP_SIZE-1:0][OFMAP_SIZE-1:0]
+    output bit [(2*IP_DATA_WIDTH)-1:0] result_matrix [OFMAP_SIZE-1:0][OFMAP_SIZE-1:0]
 
 );
 
@@ -35,7 +35,7 @@ endgenerate
 
 conv_mac inst_conv_mac 
 (
-    .clk(clk),
+    //.clk(clk),
     .matrix(temp_reg), 
     .result_matrix(result_matrix)
 );

@@ -4,12 +4,12 @@
 module conv_mac 
 import yolo_params_pkg::*;
 (
-    input bit clk,
+    //input bit clk,
     input bit [(2*IP_DATA_WIDTH)-1:0] matrix [OFMAP_SIZE*OFMAP_SIZE][FILTER_SIZE*FILTER_SIZE-1:0],
-    output bit [(2*IP_DATA_WIDTH):0] result_matrix [OFMAP_SIZE-1:0][OFMAP_SIZE-1:0]
+    output bit [(2*IP_DATA_WIDTH)-1:0] result_matrix [OFMAP_SIZE-1:0][OFMAP_SIZE-1:0]
 );
 
-bit [(2*IP_DATA_WIDTH):0] row_sum [OFMAP_SIZE*OFMAP_SIZE-1:0];
+bit [(2*IP_DATA_WIDTH)-1:0] row_sum [OFMAP_SIZE*OFMAP_SIZE-1:0];
 
 
 

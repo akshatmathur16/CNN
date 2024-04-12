@@ -7,8 +7,8 @@ module max_func#(parameter NUMINPUT =10,parameter INPUTWIDTH =16, parameter OPDA
     input clk,
     input [(NUMINPUT*INPUTWIDTH)-1:0] ip_data,
     input ip_valid,
-    output reg [OPDATA_WIDTH-1:0] op_data,
-    output reg op_data_valid
+    output bit [OPDATA_WIDTH-1:0] op_data,
+    output bit op_data_valid
 );
 
 bit [INPUTWIDTH-1:0] maxValue;
