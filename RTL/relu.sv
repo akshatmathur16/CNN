@@ -20,7 +20,7 @@ begin
     if($signed(in) <= 0)
         mem_out[0] <= 'b0;
     else
-        mem_out[0] <= mem[in];
+        mem_out[0] <= in;
 end
 
 endmodule
