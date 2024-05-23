@@ -4,34 +4,41 @@
 // 2. piecewise linear func = RELU
 
 
-//`define PRETRAIN
+`define PRETRAIN
 //TODO take care of -ve no.s
 //TODO generate weights and activation function memory in the neuron itself based on layer and neuron no.
 //TODO consider registers instead of memory for weights - DISCUSS
-module neuron #(parameter IP_DATA_WIDTH=8, ACT_FN="RELU", NUM_IP=1, ACT_FN_SIZE=5,DENSE_LAYER=1,DENSE_LAYER_NEURONS=2)
+module neuron #(parameter IP_DATA_WIDTH=8, WT_WIDTH=8, ACT_FN="RELU", NUM_IP=1, ACT_FN_SIZE=5,DENSE_LAYER=1,DENSE_LAYER_NEURONS=2)
 //import yolo_params_pkg::*;
 (
     input clk,
     input rst,
-    input signed [2*IP_DATA_WIDTH-1:0] x [NUM_IP-1:0],
-    input signed [2*IP_DATA_WIDTH-1:0] wt_in [NUM_IP-1:0],
+    //input signed [2*IP_DATA_WIDTH-1:0] x [NUM_IP-1:0],
+    //input signed [2*IP_DATA_WIDTH-1:0] wt_in [NUM_IP-1:0],
+    input signed [IP_DATA_WIDTH-1:0] x [NUM_IP-1:0],
+    input signed [WT_WIDTH-1:0] wt_in [NUM_IP-1:0],
     input update_wts,
-    output bit signed [2*IP_DATA_WIDTH-1:0] out
+    output bit signed [(WT_WIDTH+IP_DATA_WIDTH)-1:0] out
 );
 
-bit signed [2*IP_DATA_WIDTH-1:0] sum_out;
+bit signed [(WT_WIDTH+IP_DATA_WIDTH)-1:0] sum_out;
 bit signed [IP_DATA_WIDTH-1:0] x_d [NUM_IP-1:0];
 
 bit [$clog2(IP_DATA_WIDTH)-1:0] count;
-bit [$clog2(NUM_IP)-1:0] wt_count;
+//bit [$clog2(NUM_IP)-1:0] wt_count;
 
 // Weight ROM
 bit signed [IP_DATA_WIDTH-1:0] wt_mem [NUM_IP-1:0];
 
-`ifdef PRETRAIN
-    initial begin
-        $readmemb("wt_mem.init", wt_mem);
-    end
+//Initializing weight ROM
+initial begin
+    $readmemb("wt_mem.init", wt_mem);
+end
+
+//`ifdef PRETRAIN
+//    initial begin
+//        $readmemb("wt_mem.init", wt_mem);
+//    end
 //`elsif RANDOMIZE
 //    initial begin
 //        for (int i=0 ; i<NUM_IP;i++ ) 
@@ -41,21 +48,21 @@ bit signed [IP_DATA_WIDTH-1:0] wt_mem [NUM_IP-1:0];
 //
 //        end
 //    end
-`else  // BACKPROP
-    always @(posedge clk)
-    begin
-        //Writing back into wt_mem updated weigths when wt_in is enabled
-        if(update_wts)
-        begin
-            wt_mem[wt_count] <= wt_in[wt_count];
-            wt_count <= wt_count +1; 
-        end
-
-
-    end
-
-  
-`endif
+//`else  // BACKPROP
+//    always @(posedge clk)
+//    begin
+//        //Writing back into wt_mem updated weigths when wt_in is enabled
+//        if(update_wts)
+//        begin
+//            wt_mem[wt_count] <= wt_in[wt_count];
+//            wt_count <= wt_count +1; 
+//        end
+//
+//
+//    end
+//
+//  
+//`endif
 
 // Delaying input by 1 clock cycle
 always @(posedge clk) begin
@@ -95,17 +102,29 @@ always @(posedge clk) begin
     
 end
 
-generate
-    if(ACT_FN=="SIGMOID")
-        sigmoid_func #(.MEM_WIDTH(ACT_FN_SIZE), .IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_sigmoid_func
-        (
-            .clk(clk),
-            .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // passing 5 bits
-            .mem_out(out)         // getting value from activation function
+//generate
+//    if(ACT_FN=="SIGMOID")
+//        sigmoid_func #(.MEM_WIDTH(ACT_FN_SIZE), .IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_sigmoid_func
+//        (
+//            .clk(clk),
+//            .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // passing 5 bits
+//            .mem_out(out)         // getting value from activation function
+//
+//        );
+//    else if(ACT_FN=="RELU")
+//        relu_func #(.MEM_WIDTH(ACT_FN_SIZE), .IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_relu_func
+//            (
+//                .clk(clk),
+//                .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // pasing 5 bits
+//                .mem_out(out)         // getting value from activation function
+//
+//            );
+//endgenerate
 
-        );
-    else if(ACT_FN=="RELU")
-        relu_func #(.MEM_WIDTH(ACT_FN_SIZE), .IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_relu_func
+generate
+
+    if(ACT_FN=="RELU")
+        relu_func #(.IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_relu_func
             (
                 .clk(clk),
                 .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // pasing 5 bits
@@ -113,7 +132,6 @@ generate
 
             );
 endgenerate
-
 
     
 endmodule     
