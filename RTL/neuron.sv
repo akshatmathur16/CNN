@@ -13,11 +13,8 @@ module neuron #(parameter IP_DATA_WIDTH=8, WT_WIDTH=8, ACT_FN="RELU", NUM_IP=1, 
 (
     input clk,
     input rst,
-    //input signed [2*IP_DATA_WIDTH-1:0] x [NUM_IP-1:0],
-    //input signed [2*IP_DATA_WIDTH-1:0] wt_in [NUM_IP-1:0],
     input signed [IP_DATA_WIDTH-1:0] x [NUM_IP-1:0],
-    input signed [WT_WIDTH-1:0] wt_in [NUM_IP-1:0],
-    input update_wts,
+    //input signed [WT_WIDTH-1:0] wt_in [NUM_IP-1:0],
     output bit signed [(WT_WIDTH+IP_DATA_WIDTH)-1:0] out
 );
 
@@ -28,41 +25,12 @@ bit [$clog2(IP_DATA_WIDTH)-1:0] count;
 //bit [$clog2(NUM_IP)-1:0] wt_count;
 
 // Weight ROM
-bit signed [IP_DATA_WIDTH-1:0] wt_mem [NUM_IP-1:0];
+bit signed [WT_WIDTH-1:0] wt_mem [NUM_IP-1:0];
 
 //Initializing weight ROM
 initial begin
     $readmemb("wt_mem.init", wt_mem);
 end
-
-//`ifdef PRETRAIN
-//    initial begin
-//        $readmemb("wt_mem.init", wt_mem);
-//    end
-//`elsif RANDOMIZE
-//    initial begin
-//        for (int i=0 ; i<NUM_IP;i++ ) 
-//        begin
-//            wt_mem[i] = $random; //TODO take care of -ve no.s
-//            $display("wt_mem[%h]=%h", i, wt_mem[i]);
-//
-//        end
-//    end
-//`else  // BACKPROP
-//    always @(posedge clk)
-//    begin
-//        //Writing back into wt_mem updated weigths when wt_in is enabled
-//        if(update_wts)
-//        begin
-//            wt_mem[wt_count] <= wt_in[wt_count];
-//            wt_count <= wt_count +1; 
-//        end
-//
-//
-//    end
-//
-//  
-//`endif
 
 // Delaying input by 1 clock cycle
 always @(posedge clk) begin
@@ -102,33 +70,15 @@ always @(posedge clk) begin
     
 end
 
-//generate
-//    if(ACT_FN=="SIGMOID")
-//        sigmoid_func #(.MEM_WIDTH(ACT_FN_SIZE), .IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_sigmoid_func
-//        (
-//            .clk(clk),
-//            .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // passing 5 bits
-//            .mem_out(out)         // getting value from activation function
-//
-//        );
-//    else if(ACT_FN=="RELU")
-//        relu_func #(.MEM_WIDTH(ACT_FN_SIZE), .IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_relu_func
-//            (
-//                .clk(clk),
-//                .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // pasing 5 bits
-//                .mem_out(out)         // getting value from activation function
-//
-//            );
-//endgenerate
 
 generate
 
     if(ACT_FN=="RELU")
-        relu_func #(.IP_DATA_WIDTH(IP_DATA_WIDTH)) inst_relu_func
+        relu_func #(.IP_DATA_WIDTH(WT_WIDTH+IP_DATA_WIDTH)) inst_relu_func
             (
                 .clk(clk),
-                .in(sum_out[2*IP_DATA_WIDTH-1-:ACT_FN_SIZE]), // pasing 5 bits
-                .mem_out(out)         // getting value from activation function
+                .in(sum_out), 
+                .act_out(out)        
 
             );
 endgenerate
