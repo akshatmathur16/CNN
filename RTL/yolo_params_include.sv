@@ -1,5 +1,6 @@
 //convolution
 parameter IP_DATA_WIDTH=8;
+parameter WT_WIDTH=8;
 parameter IFMAP_SIZE=5;
 parameter FILTER_SIZE=3;
 parameter STRIDE=1;

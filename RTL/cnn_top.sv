@@ -5,10 +5,10 @@ module cnn_top #(parameter IP_LAYER_NEURONS=RESULT_WIDTH*RESULT_WIDTH, ACT_FN="R
     input rst,
     input bit [IP_DATA_WIDTH-1:0] ifmap[IFMAP_SIZE-1:0][IFMAP_SIZE-1:0], // input image
     input bit [IP_DATA_WIDTH-1:0] filter [FILTER_SIZE-1:0][FILTER_SIZE-1:0], // filter for convolution
-    input signed [2*IP_DATA_WIDTH-1:0] wt_in [(IP_LAYER_NEURONS*NUM_IP)-1:0], // input to input layer of fully connected 
-    input signed [2*IP_DATA_WIDTH-1:0]wt_temp[IP_LAYER_NEURONS], // input to dense layer to fully connected
-    input signed [2*IP_DATA_WIDTH-1:0]wt_dense[DENSE_LAYER_NEURONS], // input to final layer of fully connected
-    input update_wts, // handshaking signal to fully connected 
+    //input signed [2*IP_DATA_WIDTH-1:0] wt_in [(IP_LAYER_NEURONS*NUM_IP)-1:0], // input to input layer of fully connected 
+    //input signed [2*IP_DATA_WIDTH-1:0]wt_temp[IP_LAYER_NEURONS], // input to dense layer to fully connected
+    //input signed [2*IP_DATA_WIDTH-1:0]wt_dense[DENSE_LAYER_NEURONS], // input to final layer of fully connected
+    //input update_wts, // handshaking signal to fully connected 
     output bit op_data_valid, //handshaking signal coming from max func
     output signed [2*IP_DATA_WIDTH-1:0] out // final output from cnn top
 );
@@ -48,15 +48,15 @@ max_pooling #(.IP_DATA_WIDTH(IP_DATA_WIDTH), .ARRAY_WIDTH(ARRAY_WIDTH), .POOL_FI
 
 //Flattening already done here
 
-fully_connected_layer #(.IP_DATA_WIDTH(IP_DATA_WIDTH), .IP_LAYER_NEURONS(IP_LAYER_NEURONS), .ACT_FN("RELU"), .NUM_IP(1), .ACT_FN_SIZE(5), .DENSE_LAYER(1), .DENSE_LAYER_NEURONS(2)) inst_fully_connected_layer 
+fully_connected_layer #(.IP_DATA_WIDTH(IP_DATA_WIDTH), WT_WIDTH(WT_WIDTH), .IP_LAYER_NEURONS(IP_LAYER_NEURONS), .ACT_FN("RELU"), .NUM_IP(8), .ACT_FN_SIZE(5), .DENSE_LAYER(1), .DENSE_LAYER_NEURONS(2)) inst_fully_connected_layer 
 (
     .clk(clk),
     .rst(rst),
     .x(max_pooling_result),
-    .wt_in(wt_in),
-    .wt_temp(wt_temp),
-    .wt_dense(wt_dense),
-    .update_wts(update_wts),
+    //.wt_in(wt_in),
+    //.wt_temp(wt_temp),
+    //.wt_dense(wt_dense),
+    //.update_wts(update_wts),
     .out(full_conn_layer_out)
 
 );
