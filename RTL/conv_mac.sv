@@ -1,8 +1,7 @@
 //Author: Akshat Mathur
 //Code revisions:
 
-module conv_mac 
-import yolo_params_pkg::*;
+module conv_mac #(parameter IP_DATA_WIDTH=8, IFMAP_SIZE=5, FILTER_SIZE=3, STRIDE=1, OFMAP_SIZE=(IFMAP_SIZE-FILTER_SIZE)/STRIDE+ 1, ARRAY_WIDTH=3, POOL_FILTER_SIZE = 2, POOL_STRIDE = 1, RESULT_WIDTH = ((ARRAY_WIDTH-POOL_FILTER_SIZE)/POOL_STRIDE) + 1) 
 (
     //input bit clk,
     input bit [(2*IP_DATA_WIDTH)-1:0] matrix [OFMAP_SIZE*OFMAP_SIZE][FILTER_SIZE*FILTER_SIZE-1:0],
