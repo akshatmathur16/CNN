@@ -9,10 +9,6 @@
     input clk,
     input rst,
     input signed [IP_DATA_WIDTH-1:0] x [(IP_LAYER_NEURONS*NUM_IP)-1:0], //input layer
-    //input signed [IP_DATA_WIDTH-1:0] wt_in [(IP_LAYER_NEURONS*NUM_IP)-1:0], //input layer weights
-    //input signed [IP_DATA_WIDTH-1:0]wt_temp[IP_LAYER_NEURONS], //dense layer weights
-    //input signed [IP_DATA_WIDTH-1:0]wt_dense[DENSE_LAYER_NEURONS], // output layer weights
-    //input update_wts,
     output signed [(IP_DATA_WIDTH + (3*WT_WIDTH))-1:0] out //final output 
 
 );
@@ -23,30 +19,29 @@ bit signed [(IP_DATA_WIDTH+(2*WT_WIDTH)) -1:0]out_dense[DENSE_LAYER_NEURONS-1:0]
 genvar i,j,k,l;
 
 generate
-  for(i=0; i< IP_LAYER_NEURONS; i++) //i=4
+  for(i=0; i< IP_LAYER_NEURONS; i++) //i=46
   begin
 (* keep_hierarchy = "yes" *) neuron #(.IP_DATA_WIDTH(IP_DATA_WIDTH), .WT_WIDTH(WT_WIDTH), .ACT_FN("RELU"), .NUM_IP(NUM_IP), .ACT_FN_SIZE(ACT_FN_SIZE), .DENSE_LAYER(DENSE_LAYER), .DENSE_LAYER_NEURONS(DENSE_LAYER_NEURONS)) inst_1
       (
           .clk(clk),
           .rst(rst),
           .x(x[((i+1)*NUM_IP)-1:NUM_IP*i]) ,
-          //.wt_in(wt_in[((i+1)*NUM_IP)-1:NUM_IP*i]) ,
           .out(out_temp[i])
 
       );
   end
 endgenerate
 
+//hardcoding number of dene layers to 1
 generate
 
-      for(k=0; k< DENSE_LAYER_NEURONS; k++) //k=2
+      for(k=0; k< DENSE_LAYER_NEURONS; k++) 
       begin
-(* keep_hierarchy = "yes" *) neuron #(.IP_DATA_WIDTH(IP_DATA_WIDTH+WT_WIDTH), .WT_WIDTH(WT_WIDTH), .ACT_FN("RELU"), .NUM_IP(IP_LAYER_NEURONS), .ACT_FN_SIZE(ACT_FN_SIZE), .DENSE_LAYER(DENSE_LAYER), .DENSE_LAYER_NEURONS(DENSE_LAYER_NEURONS)) inst_2
+          (* keep_hierarchy = "yes" *) neuron #(.IP_DATA_WIDTH(IP_DATA_WIDTH+WT_WIDTH), .WT_WIDTH(WT_WIDTH), .ACT_FN("RELU"), .NUM_IP(IP_LAYER_NEURONS), .ACT_FN_SIZE(ACT_FN_SIZE), .DENSE_LAYER(DENSE_LAYER), .DENSE_LAYER_NEURONS(DENSE_LAYER_NEURONS)) inst_2
           (
               .clk(clk),
               .rst(rst),
               .x(out_temp) ,
-              //.wt_in(wt_temp) ,
               .out(out_dense[k])
           );
 
